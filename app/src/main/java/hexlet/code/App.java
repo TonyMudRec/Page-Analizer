@@ -3,7 +3,17 @@
  */
 package hexlet.code;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import hexlet.code.repository.BaseRepository;
 import io.javalin.Javalin;
+
+import java.io.File;
+import java.net.URL;
+import java.nio.file.Files;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.util.stream.Collectors;
 
 public class App {
 
@@ -13,6 +23,24 @@ public class App {
     }
 
     public static Javalin getApp() {
+/*
+        HikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl("jdbc:h2:mem:hexlet_test;DB_CLOSE_DELAY=-1;");
+
+        try (HikariDataSource dataSource = new HikariDataSource(hikariConfig)) {
+            URL url = App.class.getClassLoader().getResource("schema.sql");
+            File file = new File(url.getFile());
+            String sql = Files.lines(file.toPath())
+                    .collect(Collectors.joining("\n"));
+            Connection connection = dataSource.getConnection();
+            Statement statement = connection.createStatement();
+            statement.execute(sql);
+            BaseRepository.setDataSource(dataSource);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+*/
+
         Javalin app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
         });
