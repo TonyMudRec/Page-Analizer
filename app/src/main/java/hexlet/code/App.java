@@ -16,7 +16,9 @@ public class App {
         Javalin app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
         });
-
+        app.get("/", ctx -> {
+            ctx.result("Hello World");
+        });
         return app;
     }
 }
