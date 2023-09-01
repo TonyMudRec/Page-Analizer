@@ -2,7 +2,6 @@
 app/.gradle
 
 # Ignore Gradle build output directory
-app/build
 .gitattributes
 .git
 app/.idea
