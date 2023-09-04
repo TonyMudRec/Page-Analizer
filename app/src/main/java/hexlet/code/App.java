@@ -23,9 +23,9 @@ public class App {
     }
 
     public static Javalin getApp() {
-/*
-        HikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl("jdbc:h2:mem:hexlet_test;DB_CLOSE_DELAY=-1;");
+        HikariConfig hikariConfig = new HikariConfig();
+        String jdbc = System.getenv("JDBC_DATABASE_URL");
+        hikariConfig.setJdbcUrl(jdbc);
 
         try (HikariDataSource dataSource = new HikariDataSource(hikariConfig)) {
             URL url = App.class.getClassLoader().getResource("schema.sql");
@@ -35,11 +35,10 @@ public class App {
             Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement();
             statement.execute(sql);
-            BaseRepository.setDataSource(dataSource);
+            BaseRepository.dataSource = dataSource;
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-*/
 
         Javalin app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
