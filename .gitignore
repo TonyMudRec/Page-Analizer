@@ -3,6 +3,7 @@ app/.gradle
 
 # Ignore Gradle build output directory
 app/build
+app/jte-classes
 .gitattributes
 .git
 app/.idea

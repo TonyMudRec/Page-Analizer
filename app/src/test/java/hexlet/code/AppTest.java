@@ -12,8 +12,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class AppTest {
 
@@ -36,7 +35,9 @@ class AppTest {
     void testRoot() {
         HttpResponse<String> response = Unirest.get(baseUrl + "/").asString();
         String content = response.getBody();
-        assertEquals(200, response.getStatus());
-        assertEquals("Hello World", content);
+
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getBody()).contains("Анализатор страниц");
+        assertThat(response.getBody()).contains("https://www.example.com");
     }
 }

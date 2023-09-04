@@ -5,8 +5,14 @@ package hexlet.code;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import gg.jte.ContentType;
+import gg.jte.TemplateEngine;
+import gg.jte.resolve.ResourceCodeResolver;
+import hexlet.code.controller.RootController;
 import hexlet.code.repository.BaseRepository;
+import hexlet.code.util.NamedRoutes;
 import io.javalin.Javalin;
+import io.javalin.rendering.template.JavalinJte;
 
 import java.io.File;
 import java.net.URL;
@@ -40,12 +46,24 @@ public class App {
             System.out.println(e.getMessage());
         }
 
+        JavalinJte.init(createTemplateEngine());
+
         Javalin app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
         });
-        app.get("/", ctx -> {
-            ctx.result("Hello World");
-        });
+
+        addRoutes(app);
+
         return app;
+    }
+
+    private static TemplateEngine createTemplateEngine() {
+        ClassLoader classLoader = App.class.getClassLoader();
+        ResourceCodeResolver codeResolver = new ResourceCodeResolver("templates", classLoader);
+        return TemplateEngine.create(codeResolver, ContentType.Html);
+    }
+
+    private static void addRoutes(Javalin app) {
+        app.get(NamedRoutes.rootPath(), RootController::getRootPage);
     }
 }
