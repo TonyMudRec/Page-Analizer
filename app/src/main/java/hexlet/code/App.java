@@ -9,42 +9,44 @@ import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import gg.jte.resolve.ResourceCodeResolver;
 import hexlet.code.controller.RootController;
+import hexlet.code.controller.UrlController;
 import hexlet.code.repository.BaseRepository;
 import hexlet.code.util.NamedRoutes;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.stream.Collectors;
 
 public class App {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException, IOException {
         Javalin app = getApp();
         app.start(8080);
     }
 
-    public static Javalin getApp() {
+    public static Javalin getApp() throws IOException, SQLException {
         HikariConfig hikariConfig = new HikariConfig();
         String jdbc = System.getenv("JDBC_DATABASE_URL");
         hikariConfig.setJdbcUrl(jdbc);
 
-        try (HikariDataSource dataSource = new HikariDataSource(hikariConfig)) {
+        HikariDataSource dataSource = new HikariDataSource(hikariConfig);
             URL url = App.class.getClassLoader().getResource("schema.sql");
             File file = new File(url.getFile());
             String sql = Files.lines(file.toPath())
                     .collect(Collectors.joining("\n"));
-            Connection connection = dataSource.getConnection();
-            Statement statement = connection.createStatement();
+
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
             statement.execute(sql);
-            BaseRepository.dataSource = dataSource;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
         }
+        BaseRepository.dataSource = dataSource;
 
         JavalinJte.init(createTemplateEngine());
 
@@ -65,5 +67,7 @@ public class App {
 
     private static void addRoutes(Javalin app) {
         app.get(NamedRoutes.rootPath(), RootController::getRootPage);
+        app.get(NamedRoutes.urlsPath(), UrlController::showUrls);
+        app.post(NamedRoutes.urlsPath(), UrlController::addUrl);
     }
 }

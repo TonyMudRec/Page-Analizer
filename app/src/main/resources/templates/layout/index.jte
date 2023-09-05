@@ -24,24 +24,25 @@
         </div>
     </div>
 </nav>
+<main class="flex-grow-1">
 @if(page != null && page.getFlash() != null)
-    <main class="flex-grow-1">
         <div class="alert ${page.getFlashType()}" role="alert">
-            ${page.getFlash()}
+            <p class="m-0">${page.getFlash()}</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    </main>
 @endif
 
 ${content}
+
+</main>
 
 <footer class="footer border-top py-3 mt-5 bg-light">
     <div class="container-xl">
         <div class="text-center">
             created by
-            <a href="https://github.com/TonyMudRec/java-project-72">TonyMudRec</a>
+            <a href="https://github.com/TonyMudRec/java-project-72" target="_blank">TonyMudRec</a>
         </div>
     </div>
 </footer>
-
 </body>
 </html>

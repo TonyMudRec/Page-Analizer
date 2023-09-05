@@ -13,4 +13,5 @@ import java.util.List;
 @Getter
 public class AllUrlsPage extends BasePage {
     private List<Url> urls;
+    private int pageCount;
 }

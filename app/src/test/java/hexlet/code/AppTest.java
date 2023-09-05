@@ -12,6 +12,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AppTest {
@@ -20,7 +23,7 @@ class AppTest {
     private static String baseUrl;
 
     @BeforeAll
-    public static void beforeAll() {
+    public static void beforeAll() throws SQLException, IOException {
         app = App.getApp();
         app.start(0);
         int port = app.port();
@@ -32,12 +35,19 @@ class AppTest {
         app.stop();
     }
     @Test
-    void testRoot() {
+    void rootTest() {
         HttpResponse<String> response = Unirest.get(baseUrl + "/").asString();
-        String content = response.getBody();
 
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getBody()).contains("Анализатор страниц");
         assertThat(response.getBody()).contains("https://www.example.com");
+    }
+
+    @Test
+    void urlsTest() {
+        HttpResponse<String> response = Unirest.get(baseUrl + "/urls").asString();
+
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getBody()).contains("Сайты");
     }
 }
