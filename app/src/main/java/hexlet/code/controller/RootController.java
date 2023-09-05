@@ -7,9 +7,9 @@ import java.util.Collections;
 
 public class RootController {
     public static void getRootPage(Context ctx) {
-        String url = ctx.formParamAsClass("url", String.class).getOrDefault("example.com");
-        MainPage page = new MainPage(url);
+        MainPage page = new MainPage();
         page.setFlash(ctx.consumeSessionAttribute("flash"));
+        page.setFlashType(ctx.consumeSessionAttribute("flashType"));
         ctx.render("main.jte", Collections.singletonMap("page", page));
     }
 }

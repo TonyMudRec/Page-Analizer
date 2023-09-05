@@ -15,9 +15,8 @@ content = @`
                     <div class="row">
                         <div class="col">
                             <div class="form-floating">
-                                <input id="url-input" autofocus type="text" required name="url" aria-label="url"
-                                       class="form-control w-100" placeholder="ссылка RSS" autocomplete="off">
-<%--                                       value="${mainPage.getUrl()}">--%>
+                                <input id="url-input" autofocus type="text" required name="url"
+                                       class="form-control w-100">
                                 <label for="url-input">Ссылка</label>
                             </div>
                         </div>

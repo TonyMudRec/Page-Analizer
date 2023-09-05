@@ -26,7 +26,9 @@
 </nav>
 @if(page != null && page.getFlash() != null)
     <main class="flex-grow-1">
-        <p>${page.getFlash()}</p>
+        <div class="alert ${page.getFlashType()}" role="alert">
+            ${page.getFlash()}
+        </div>
     </main>
 @endif
 
