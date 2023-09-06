@@ -1,6 +1,5 @@
 package hexlet.code.controller;
 
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -16,10 +15,13 @@ import io.javalin.http.Context;
 
 public class UrlController {
     private static final int PER = 5;
-    public static void addUrl(Context ctx) throws MalformedURLException, SQLException {
-        java.net.URL url = new URL(ctx.formParam("url"));
 
-        if (url.getProtocol() == null || url.getHost() == null) {
+    public static void addUrl(Context ctx) throws SQLException {
+        URL url;
+
+        try {
+            url = new URL(ctx.formParam("url"));
+        } catch (MalformedURLException e) {
             ctx.sessionAttribute("flash", "Некорректный URL");
             ctx.sessionAttribute("flashType", "alert-danger");
             ctx.redirect(NamedRoutes.rootPath());
@@ -28,10 +30,10 @@ public class UrlController {
 
         String protocol = url.getProtocol();
         String host = url.getHost();
-        String port = url.getPort() == 0 ? "" : ":" + url.getPort();
+        String port = url.getPort() == -1 ? "" : ":" + url.getPort();
+        String name = protocol + "://" + host + port;
 
-        if (UrlRepository.find(host).isEmpty()) {
-            String name = protocol + "://" + host + port;
+        if (UrlRepository.find(name) == null) {
             long now = System.currentTimeMillis();
             Timestamp currentTime = new Timestamp(now);
             Url newUrl = new Url(name, currentTime);
@@ -47,17 +49,19 @@ public class UrlController {
     }
 
     public static void showUrls(Context ctx) throws SQLException {
-        List<Url> urls;
+        String flash = ctx.consumeSessionAttribute("flash");
+        String flashType = ctx.consumeSessionAttribute("flashType");
+        List<Url> urls = UrlRepository.getEntities();
         int pageCount = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
         int firstIndex = (pageCount - 1) * PER;
 
-        if(UrlRepository.getEntities().size() > PER) {
-            urls = UrlRepository.getEntities().subList(firstIndex, firstIndex + PER);
-        } else {
-            urls = UrlRepository.getEntities();
+        if (urls.size() > PER) {
+            urls = urls.subList(firstIndex, firstIndex + PER);
         }
 
         AllUrlsPage page = new AllUrlsPage(urls, pageCount);
+        page.setFlash(flash);
+        page.setFlashType(flashType);
         ctx.render("urls.jte", Collections.singletonMap("page", page));
     }
 }

@@ -10,10 +10,9 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class UrlRepository extends BaseRepository {
-    public static  void save(Url url) throws SQLException {
+    public static void save(Url url) throws SQLException {
         String sql = "INSERT INTO urls (name, created_at) VALUES (?, ?)";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -30,27 +29,27 @@ public class UrlRepository extends BaseRepository {
         }
     }
 
-    public static Optional<Url> find(String host) throws SQLException {
+    public static Url find(String name) throws SQLException {
         String sql = "SELECT * FROM urls WHERE name = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, host);
+            preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 Long id = resultSet.getLong("id");
                 Timestamp createdAt = resultSet.getTimestamp("created_at");
-                Url url = new Url(host, createdAt);
+                Url url = new Url(name, createdAt);
                 url.setId(id);
-                return Optional.of(url);
+                return url;
             }
-            return Optional.empty();
+            return null;
         }
     }
 
     public static List<Url> getEntities() throws SQLException {
         String sql = "SELECT * FROM urls";
         try (Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Url> urls = new ArrayList<>();
             while (resultSet.next()) {

@@ -37,10 +37,10 @@ public class App {
         hikariConfig.setJdbcUrl(jdbc);
 
         HikariDataSource dataSource = new HikariDataSource(hikariConfig);
-            URL url = App.class.getClassLoader().getResource("schema.sql");
-            File file = new File(url.getFile());
-            String sql = Files.lines(file.toPath())
-                    .collect(Collectors.joining("\n"));
+        URL url = App.class.getClassLoader().getResource("schema.sql");
+        File file = new File(url.getFile());
+        String sql = Files.lines(file.toPath())
+                .collect(Collectors.joining("\n"));
 
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {

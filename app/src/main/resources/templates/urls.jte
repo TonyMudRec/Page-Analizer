@@ -1,9 +1,9 @@
 @import hexlet.code.pages.manager.AllUrlsPage
 @import hexlet.code.model.Url
-@param AllUrlsPage allUrlsPage
+@param AllUrlsPage page
 
 @template.layout.index(
-page = allUrlsPage,
+page = page,
 title = "All Urls",
 content = @`
     <section>
@@ -19,8 +19,8 @@ content = @`
                 </tr>
                 </thead>
                 <tbody>
-                @if(allUrlsPage.getUrls() != null)
-                    @for(Url url : allUrlsPage.getUrls())
+                @if(page.getUrls() != null)
+                    @for(Url url : page.getUrls())
                         <tr>
                             <td>${url.getId()}</td>
                             <td>
@@ -33,21 +33,23 @@ content = @`
                 @endif
                 </tbody>
             </table>
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center mt-5">
-                    @if(allUrlsPage.getPageCount() != 1)
-                        <li class="page-item disabled">
-                            <a class="page-link" href="/urls?page=${allUrlsPage.getPageCount() - 1}">Previous</a>
+            @if(page.getUrls() != null && page.getUrls().size() > 5)
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center mt-5">
+                        @if(page.getPageCount() != 1)
+                            <li class="page-item disabled">
+                                <a class="page-link" href="/urls?page=${page.getPageCount() - 1}">Previous</a>
+                            </li>
+                        @endif
+                        <li class="page-item active">
+                            ${page.getPageCount()}
                         </li>
-                    @endif
-                    <li class="page-item active">
-                        ${allUrlsPage.getPageCount()}
-                    </li>
-                    <li class="page-item disabled">
-                        <a class="page-link" href="/urls?page=${allUrlsPage.getPageCount() + 1}">Next</a>
-                    </li>
-                </ul>
-            </nav>
+                        <li class="page-item disabled">
+                            <a class="page-link" href="/urls?page=${page.getPageCount() + 1}">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            @endif
         </div>
     </section>
 `
