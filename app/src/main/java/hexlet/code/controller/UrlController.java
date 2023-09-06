@@ -18,7 +18,6 @@ public class UrlController {
 
     public static void addUrl(Context ctx) throws SQLException {
         URL url;
-
         try {
             url = new URL(ctx.formParam("url"));
         } catch (MalformedURLException e) {
@@ -27,7 +26,6 @@ public class UrlController {
             ctx.redirect(NamedRoutes.rootPath());
             return;
         }
-
         String protocol = url.getProtocol();
         String host = url.getHost();
         String port = url.getPort() == -1 ? "" : ":" + url.getPort();
