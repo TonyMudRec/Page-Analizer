@@ -26,10 +26,10 @@
     </div>
 </nav>
 <main class="flex-grow-1">
-@if(page != null && page.getFlash() != null)
+@if(page.getFlash() != null)
         <div class="alert ${page.getFlashType()} alert-dismissible fade show" role="alert">
             <p class="m-0">${page.getFlash()}</p>
-<%--            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>--%>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 @endif
 ${content}
