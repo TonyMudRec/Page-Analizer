@@ -32,9 +32,7 @@
 <%--            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>--%>
         </div>
 @endif
-
 ${content}
-
 </main>
 
 <footer class="footer border-top py-3 mt-5 bg-light">

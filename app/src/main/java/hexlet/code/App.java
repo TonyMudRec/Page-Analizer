@@ -28,12 +28,19 @@ public class App {
 
     public static void main(String[] args) throws SQLException, IOException {
         Javalin app = getApp();
-        app.start(8080);
+        app.start(getPort());
+    }
+
+    private static int getPort() {
+        String port = System.getenv().getOrDefault("PORT", "8080");
+        return Integer.valueOf(port);
     }
 
     public static Javalin getApp() throws IOException, SQLException {
         HikariConfig hikariConfig = new HikariConfig();
-        String jdbc = System.getenv("JDBC_DATABASE_URL");
+        String jdbc = System
+                .getenv()
+                .getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:hexlet_project;DB_CLOSE_DELAY=-1;");
         hikariConfig.setJdbcUrl(jdbc);
 
         HikariDataSource dataSource = new HikariDataSource(hikariConfig);
