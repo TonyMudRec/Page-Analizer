@@ -4,5 +4,20 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/8194cd4693517cf6a0e4/maintainability)](https://codeclimate.com/github/TonyMudRec/java-project-72/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/8194cd4693517cf6a0e4/test_coverage)](https://codeclimate.com/github/TonyMudRec/java-project-72/test_coverage)
 
-*Приложение:*
-https://sites-analisator.onrender.com
+*Demo:*
+[Demo on Render](https://sites-analisator.onrender.com)
+
+## Requirements
+
+* JDK 17.0.8.1
+* Gradle 7.4.2
+* GNU Make
+
+## Usage
+
+```bash
+make install
+make start
+```
+
+Open in browser: http://localhost:8080

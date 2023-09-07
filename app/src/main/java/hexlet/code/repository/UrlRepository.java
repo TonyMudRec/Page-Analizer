@@ -46,6 +46,23 @@ public class UrlRepository extends BaseRepository {
         }
     }
 
+    public static Url find(Long id) throws SQLException {
+        String sql = "SELECT * FROM urls WHERE id = ?";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                String name = resultSet.getString("name");
+                Timestamp createdAt = resultSet.getTimestamp("created_at");
+                Url url = new Url(name, createdAt);
+                url.setId(id);
+                return url;
+            }
+            return null;
+        }
+    }
+
     public static List<Url> getEntities() throws SQLException {
         String sql = "SELECT * FROM urls";
         try (Connection connection = dataSource.getConnection();

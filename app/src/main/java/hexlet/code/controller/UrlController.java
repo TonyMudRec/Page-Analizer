@@ -4,11 +4,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
 import hexlet.code.model.Url;
 import hexlet.code.pages.manager.AllUrlsPage;
+import hexlet.code.pages.manager.UrlPage;
 import hexlet.code.repository.UrlRepository;
 import hexlet.code.util.NamedRoutes;
 import io.javalin.http.Context;
@@ -61,5 +63,15 @@ public class UrlController {
         page.setFlash(flash);
         page.setFlashType(flashType);
         ctx.render("urls.jte", Collections.singletonMap("page", page));
+    }
+
+    public static void showUrl(Context ctx) throws SQLException {
+        Long id = ctx.pathParamAsClass("id", Long.class).get();
+        Url url = UrlRepository.find(id);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        assert url != null;
+        String createdAt  = dateFormat.format(url.getCreatedAt());
+        UrlPage page = new UrlPage(id, url.getName(), createdAt);
+        ctx.render("show.jte", Collections.singletonMap("page", page));
     }
 }

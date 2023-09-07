@@ -26,13 +26,12 @@
     </div>
 </nav>
 <main class="flex-grow-1">
-@if(page.getFlash() != null)
-        <div class="alert ${page.getFlashType()} alert-dismissible fade show" role="alert">
+    @if(page != null && page.getFlash() != null)
+        <div class="alert ${page.getFlashType()} alert-dismissible fade show  m-0" role="alert">
             <p class="m-0">${page.getFlash()}</p>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-@endif
-${content}
+    @endif
+    ${content}
 </main>
 
 <footer class="footer border-top py-3 mt-5 bg-light">
