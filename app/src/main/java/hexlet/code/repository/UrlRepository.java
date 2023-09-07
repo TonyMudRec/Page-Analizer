@@ -2,7 +2,6 @@ package hexlet.code.repository;
 
 import hexlet.code.model.Url;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,9 +13,7 @@ import java.util.List;
 public class UrlRepository extends BaseRepository {
     public static void save(Url url) throws SQLException {
         String sql = "INSERT INTO urls (name, created_at) VALUES (?, ?)";
-        try (PreparedStatement preparedStatement = dataSource
-                .getConnection()
-                .prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = getStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, url.getName());
             preparedStatement.setTimestamp(2, url.getCreatedAt());
             preparedStatement.executeUpdate();
@@ -32,9 +29,7 @@ public class UrlRepository extends BaseRepository {
 
     public static Url find(String name) throws SQLException {
         String sql = "SELECT * FROM urls WHERE name = ?";
-        try (PreparedStatement preparedStatement = dataSource
-                .getConnection()
-                .prepareStatement(sql)) {
+        try (PreparedStatement preparedStatement = getStatement(sql)) {
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -50,9 +45,7 @@ public class UrlRepository extends BaseRepository {
 
     public static Url find(Long id) throws SQLException {
         String sql = "SELECT * FROM urls WHERE id = ?";
-        try (PreparedStatement preparedStatement = dataSource
-                .getConnection()
-                .prepareStatement(sql)) {
+        try (PreparedStatement preparedStatement = getStatement(sql)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -68,8 +61,7 @@ public class UrlRepository extends BaseRepository {
 
     public static List<Url> getEntities() throws SQLException {
         String sql = "SELECT * FROM urls";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (PreparedStatement preparedStatement = getStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Url> urls = new ArrayList<>();
             while (resultSet.next()) {
