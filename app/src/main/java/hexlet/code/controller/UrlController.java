@@ -73,7 +73,6 @@ public class UrlController {
         Long id = ctx.pathParamAsClass("id", Long.class).get();
         Url url = UrlRepository.find(id);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        assert url != null;
         String createdAt  = dateFormat.format(url.getCreatedAt());
         UrlPage page = new UrlPage(id, url.getName(), createdAt);
         ctx.render("show.jte", Collections.singletonMap("page", page));

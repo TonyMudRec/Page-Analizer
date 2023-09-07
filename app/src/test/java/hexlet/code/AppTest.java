@@ -3,16 +3,15 @@
  */
 package hexlet.code;
 
-
 import io.javalin.Javalin;
-import kong.unirest.HttpResponse;
-import kong.unirest.Unirest;
+import io.javalin.testtools.JavalinTest;
+
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,14 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AppTest {
 
     private static Javalin app;
-    private static String baseUrl;
+    private static final String NAME = "https://www.example.com";
 
-    @BeforeAll
-    public static void beforeAll() throws SQLException, IOException {
+    @BeforeEach
+    public void beforeEach() throws SQLException, IOException {
         app = App.getApp();
-        app.start(0);
-        int port = app.port();
-        baseUrl = "http://localhost:" + port;
     }
 
     @AfterAll
@@ -36,18 +32,45 @@ class AppTest {
     }
     @Test
     void rootTest() {
-        HttpResponse<String> response = Unirest.get(baseUrl + "/").asString();
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/");
+            assertThat(response.code()).isEqualTo(200);
+            assertThat(response.body().string()).contains("Анализатор страниц");
+        });
+    }
 
-        assertThat(response.getStatus()).isEqualTo(200);
-        assertThat(response.getBody()).contains("Анализатор страниц");
-        assertThat(response.getBody()).contains("https://www.example.com");
+    @Test
+    void addUrlsSuccessTest() {
+        JavalinTest.test(app, (server, client) -> {
+            var requestBody = "url=" + NAME;
+            var response = client.post("/urls", requestBody);
+            assertThat(response.code()).isEqualTo(200);
+            assertThat(response.body().string()).contains(NAME);
+        });
     }
 
     @Test
     void urlsTest() {
-        HttpResponse<String> response = Unirest.get(baseUrl + "/urls").asString();
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/urls");
+            assertThat(response.code()).isEqualTo(200);
+            assertThat(response.body().string()).contains("Сайты");
+        });
+    }
 
-        assertThat(response.getStatus()).isEqualTo(200);
-        assertThat(response.getBody()).contains("Сайты");
+    @Test
+    void urlTest() {
+        JavalinTest.test(app, (server, client) -> {
+            URL url = new URL(NAME);
+            String protocol = url.getProtocol();
+            String host = url.getHost();
+            String name = protocol + "://" + host;
+            var requestBody = "url=" + name;
+            client.post("/urls", requestBody);
+
+            var response = client.get("/urls/1");
+            assertThat(response.code()).isEqualTo(200);
+            assertThat(response.body().string()).contains(NAME);
+        });
     }
 }
