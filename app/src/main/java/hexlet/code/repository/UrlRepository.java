@@ -14,8 +14,9 @@ import java.util.List;
 public class UrlRepository extends BaseRepository {
     public static void save(Url url) throws SQLException {
         String sql = "INSERT INTO urls (name, created_at) VALUES (?, ?)";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = dataSource
+                .getConnection()
+                .prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, url.getName());
             preparedStatement.setTimestamp(2, url.getCreatedAt());
             preparedStatement.executeUpdate();
@@ -31,8 +32,9 @@ public class UrlRepository extends BaseRepository {
 
     public static Url find(String name) throws SQLException {
         String sql = "SELECT * FROM urls WHERE name = ?";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (PreparedStatement preparedStatement = dataSource
+                .getConnection()
+                .prepareStatement(sql)) {
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -48,8 +50,9 @@ public class UrlRepository extends BaseRepository {
 
     public static Url find(Long id) throws SQLException {
         String sql = "SELECT * FROM urls WHERE id = ?";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (PreparedStatement preparedStatement = dataSource
+                .getConnection()
+                .prepareStatement(sql)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {

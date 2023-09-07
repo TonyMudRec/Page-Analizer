@@ -20,14 +20,15 @@ public class UrlController {
 
     public static void addUrl(Context ctx) throws SQLException {
         URL url;
+
         try {
             url = new URL(ctx.formParam("url"));
         } catch (MalformedURLException e) {
-            ctx.sessionAttribute("flash", "Некорректный URL");
-            ctx.sessionAttribute("flashType", "alert-danger");
+            addFlash(ctx, "alert-danger", "Некорректный URL");
             ctx.redirect(NamedRoutes.rootPath());
             return;
         }
+
         String protocol = url.getProtocol();
         String host = url.getHost();
         String port = url.getPort() == -1 ? "" : ":" + url.getPort();
@@ -38,14 +39,17 @@ public class UrlController {
             Timestamp currentTime = new Timestamp(now);
             Url newUrl = new Url(name, currentTime);
             UrlRepository.save(newUrl);
-            ctx.sessionAttribute("flash", "Страница успешно добавлена");
-            ctx.sessionAttribute("flashType", "alert-success");
+            addFlash(ctx, "alert-success", "Страница успешно добавлена");
             ctx.redirect(NamedRoutes.urlsPath());
         } else {
-            ctx.sessionAttribute("flash", "Страница уже существует");
-            ctx.sessionAttribute("flashType", "alert-warning");
+            addFlash(ctx, "alert-warning", "Страница уже существует");
             ctx.redirect(NamedRoutes.rootPath());
         }
+    }
+
+    public static void addFlash(Context ctx, String flashType, String flash) {
+        ctx.sessionAttribute("flash", flash);
+        ctx.sessionAttribute("flashType", flashType);
     }
 
     public static void showUrls(Context ctx) throws SQLException {
