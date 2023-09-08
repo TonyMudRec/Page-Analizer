@@ -22,7 +22,7 @@ public class UrlController {
         URL url;
 
         try {
-            url = new URL(ctx.formParam("url"));
+            url = new URL(ctx.formParam("url").trim());
         } catch (MalformedURLException e) {
             addFlash(ctx, "alert-danger", "Некорректный URL");
             ctx.redirect(NamedRoutes.rootPath());

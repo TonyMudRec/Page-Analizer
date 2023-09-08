@@ -6,4 +6,4 @@ COPY /app .
 
 RUN gradle installDist
 
-CMD ./build/install/app/lib/app-1.0-SNAPSHOT.jar
+CMD ./build/install/app/bin/app
