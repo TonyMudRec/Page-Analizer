@@ -17,6 +17,8 @@
 
 ```bash
 make install
+```
+```bash
 make start
 ```
 
