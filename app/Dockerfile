@@ -4,9 +4,9 @@ WORKDIR /app
 
 COPY . .
 
-RUN ./gradlew --no-daemon dependencies
+RUN ./gradlew dependencies
 
-RUN ./gradlew --no-daemon build
+RUN ./gradlew build
 
 RUN gradle installDist
 
