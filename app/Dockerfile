@@ -4,10 +4,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN ./gradlew dependencies
-
-RUN ./gradlew build
-
 RUN gradle installDist
 
 CMD ./build/libs/app-1.0-SNAPSHOT.jar
