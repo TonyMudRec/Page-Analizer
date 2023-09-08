@@ -1,0 +1,6 @@
+.gradle
+.idea
+jte-classes/
+build/
+config/
+

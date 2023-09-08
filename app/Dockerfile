@@ -2,12 +2,9 @@ FROM gradle:7.4.2-jdk17
 
 WORKDIR /app
 
-COPY /app .
+COPY . .
 
 RUN ./gradlew --no-daemon dependencies
-
-COPY src src
-COPY config config
 
 RUN ./gradlew --no-daemon build
 
