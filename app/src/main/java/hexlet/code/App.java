@@ -15,10 +15,13 @@ import hexlet.code.util.NamedRoutes;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
 
-import java.io.File;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -42,11 +45,14 @@ public class App {
                 .getenv()
                 .getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:hexlet_project;DB_CLOSE_DELAY=-1;");
         hikariConfig.setJdbcUrl(jdbc);
-
         HikariDataSource dataSource = new HikariDataSource(hikariConfig);
-        URL url = App.class.getClassLoader().getResource("schema.sql");
-        File file = new File(url.getFile());
-        String sql = Files.lines(file.toPath())
+
+        InputStream schemaStream = App.class.getClassLoader().getResourceAsStream("schema.sql");
+        if (schemaStream == null) {
+            throw new FileNotFoundException();
+        }
+        String sql = new BufferedReader(new InputStreamReader(schemaStream, StandardCharsets.UTF_8))
+                .lines()
                 .collect(Collectors.joining("\n"));
 
         try (Connection connection = dataSource.getConnection();
