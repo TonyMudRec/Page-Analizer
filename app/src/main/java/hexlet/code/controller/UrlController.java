@@ -9,8 +9,10 @@ import java.util.Collections;
 import java.util.List;
 
 import hexlet.code.model.Url;
+import hexlet.code.model.UrlCheck;
 import hexlet.code.pages.manager.AllUrlsPage;
 import hexlet.code.pages.manager.UrlPage;
+import hexlet.code.repository.CheckRepository;
 import hexlet.code.repository.UrlRepository;
 import hexlet.code.util.NamedRoutes;
 import io.javalin.http.Context;
@@ -29,7 +31,7 @@ public class UrlController {
             return;
         }
 
-        String protocol = url.getProtocol();
+        String protocol = url.getProtocol() == null ? "http" : url.getProtocol();
         String host = url.getHost();
         String port = url.getPort() == -1 ? "" : ":" + url.getPort();
         String name = protocol + "://" + host + port;
@@ -70,10 +72,12 @@ public class UrlController {
 
     public static void showUrl(Context ctx) throws SQLException {
         Long id = ctx.pathParamAsClass("id", Long.class).get();
+        List<UrlCheck> checks = CheckRepository.find(id);
+        checks = checks.size() > PER ? checks.subList(checks.size() - PER, checks.size()) : checks;
         Url url = UrlRepository.find(id);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         String createdAt  = dateFormat.format(url.getCreatedAt());
-        UrlPage page = new UrlPage(id, url.getName(), createdAt);
+        UrlPage page = new UrlPage(id, url.getName(), createdAt, checks);
         ctx.render("show.jte", Collections.singletonMap("page", page));
     }
 }

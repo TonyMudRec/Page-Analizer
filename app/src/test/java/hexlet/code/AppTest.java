@@ -3,6 +3,7 @@
  */
 package hexlet.code;
 
+import hexlet.code.util.NamedRoutes;
 import io.javalin.Javalin;
 import io.javalin.testtools.JavalinTest;
 
@@ -19,21 +20,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AppTest {
 
     private static Javalin app;
+//    private static final MockWebServer server = new MockWebServer();
+//    private static final String NAME = server.url("https://www.example.com").toString();
     private static final String NAME = "https://www.example.com";
 
     @BeforeEach
     public void beforeEach() throws SQLException, IOException {
         app = App.getApp();
     }
+//    @BeforeAll
+//    public static void beforeAll() throws IOException {
+//        server.enqueue(new MockResponse().setBody("hello, world!"));
+//    }
 
     @AfterAll
-    public static void afterAll() {
+    public static void afterAll() throws IOException {
         app.stop();
+//        server.close();
     }
     @Test
     void rootTest() {
         JavalinTest.test(app, (server, client) -> {
-            var response = client.get("/");
+            var response = client.get(NamedRoutes.rootPath());
             assertThat(response.code()).isEqualTo(200);
             assertThat(response.body().string()).contains("Анализатор страниц");
         });
@@ -43,7 +51,7 @@ class AppTest {
     void addUrlsSuccessTest() {
         JavalinTest.test(app, (server, client) -> {
             var requestBody = "url=" + NAME;
-            var response = client.post("/urls", requestBody);
+            var response = client.post(NamedRoutes.urlsPath(), requestBody);
             assertThat(response.code()).isEqualTo(200);
             assertThat(response.body().string()).contains(NAME);
         });
@@ -52,7 +60,7 @@ class AppTest {
     @Test
     void urlsTest() {
         JavalinTest.test(app, (server, client) -> {
-            var response = client.get("/urls");
+            var response = client.get(NamedRoutes.urlsPath());
             assertThat(response.code()).isEqualTo(200);
             assertThat(response.body().string()).contains("Сайты");
         });
@@ -66,9 +74,9 @@ class AppTest {
             String host = url.getHost();
             String name = protocol + "://" + host;
             var requestBody = "url=" + name;
-            client.post("/urls", requestBody);
+            client.post(NamedRoutes.urlsPath(), requestBody);
 
-            var response = client.get("/urls/1");
+            var response = client.get(NamedRoutes.urlPath("1"));
             assertThat(response.code()).isEqualTo(200);
             assertThat(response.body().string()).contains(NAME);
         });
@@ -78,16 +86,33 @@ class AppTest {
     void multipleAddUrlTest() {
         JavalinTest.test(app, (server, client) -> {
             URL url = new URL(NAME);
-            String protocol = url.getProtocol();
-            String host = url.getHost();
+            var protocol = url.getProtocol();
+            var host = url.getHost();
             for (int i = 0; i < 6; i++) {
-                String name = protocol + "://" + host + i;
+                var name = protocol + "://" + host + i;
                 var requestBody = "url=" + name;
-                client.post("/urls", requestBody);
+                client.post(NamedRoutes.urlsPath(), requestBody);
             }
 
-            var response = client.get("/urls");
+            var response = client.get(NamedRoutes.urlsPath());
             assertThat(response.code()).isEqualTo(200);
         });
     }
+//    @Test
+//    void startCheckUrlTest() {
+//        JavalinTest.test(app, (server, client) -> {
+//            URL url = new URL(NAME);
+//            var protocol = url.getProtocol();
+//            var host = url.getHost();
+//            var name = protocol + "://" + host;
+//            var requestBody = "url=" + name;
+//
+//            client.post(NamedRoutes.urlsPath(), requestBody);
+//            client.post(NamedRoutes.checkUrl("1"));
+//
+//            var response = client.get(NamedRoutes.urlPath("1"));
+//            assertThat(response.code()).isEqualTo(200);
+//            assertThat(response.body().string()).contains("200");
+//        });
+//    }
 }

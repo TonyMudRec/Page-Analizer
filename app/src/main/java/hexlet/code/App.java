@@ -8,6 +8,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import gg.jte.resolve.ResourceCodeResolver;
+import hexlet.code.controller.CheckController;
 import hexlet.code.controller.RootController;
 import hexlet.code.controller.UrlController;
 import hexlet.code.repository.BaseRepository;
@@ -83,5 +84,6 @@ public class App {
         app.get(NamedRoutes.urlsPath(), UrlController::showUrls);
         app.post(NamedRoutes.urlsPath(), UrlController::addUrl);
         app.get(NamedRoutes.urlPath("{id}"), UrlController::showUrl);
+        app.post(NamedRoutes.checkUrl("{id}"), CheckController::addCheck);
     }
 }

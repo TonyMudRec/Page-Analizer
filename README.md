@@ -6,6 +6,7 @@
 
 *Demo:*
 [Demo on Render](https://sites-analisator.onrender.com)
+The phone version has limited functionality and is difficult to navigate.
 
 ## Requirements
 
