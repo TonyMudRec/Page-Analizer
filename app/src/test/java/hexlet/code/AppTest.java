@@ -73,4 +73,21 @@ class AppTest {
             assertThat(response.body().string()).contains(NAME);
         });
     }
+
+    @Test
+    void multipleAddUrlTest() {
+        JavalinTest.test(app, (server, client) -> {
+            URL url = new URL(NAME);
+            String protocol = url.getProtocol();
+            String host = url.getHost();
+            for (int i = 0; i < 6; i++) {
+                String name = protocol + "://" + host + i;
+                var requestBody = "url=" + name;
+                client.post("/urls", requestBody);
+            }
+
+            var response = client.get("/urls");
+            assertThat(response.code()).isEqualTo(200);
+        });
+    }
 }

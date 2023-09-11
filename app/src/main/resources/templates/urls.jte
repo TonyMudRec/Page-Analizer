@@ -33,19 +33,27 @@ content = @`
                 @endif
                 </tbody>
             </table>
-            @if(page.getUrls() != null && page.getUrls().size() > 5)
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center mt-5">
-                        @if(page.getPageCount() != 1)
-                            <li class="page-item disabled">
-                                <a class="page-link" href="/urls?page=${page.getPageCount() - 1}">Previous</a>
-                            </li>
+            @if(page.getListSize() > 5)
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item
+                        @if(page.getCurrentPage() == 1)
+                         disabled
                         @endif
-                        <li class="page-item active">
-                            ${page.getPageCount()}
+                            ">
+                            <a class="page-link" href="/urls?pageNumber=${page.getCurrentPage() - 1}">Previous</a>
                         </li>
-                        <li class="page-item disabled">
-                            <a class="page-link" href="/urls?page=${page.getPageCount() + 1}">Next</a>
+                        <li class="page-item active">
+                            <a class="page-link" href="/urls?pageNumber=${page.getCurrentPage()}">
+                                ${page.getCurrentPage()}
+                            </a>
+                        </li>
+                        <li class="page-item
+                        @if(page.getCurrentPage() * 5 >= page.getListSize())
+                         disabled
+                        @endif
+                            ">
+                            <a class="page-link" href="/urls?pageNumber=${page.getCurrentPage() + 1}">Next</a>
                         </li>
                     </ul>
                 </nav>

@@ -56,14 +56,13 @@ public class UrlController {
         String flash = ctx.consumeSessionAttribute("flash");
         String flashType = ctx.consumeSessionAttribute("flashType");
         List<Url> urls = UrlRepository.getEntities();
-        int pageCount = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
-        int firstIndex = (pageCount - 1) * PER;
+        int currentPage = ctx.queryParamAsClass("pageNumber", Integer.class).getOrDefault(1);
+        int firstIndex = (currentPage - 1) * PER;
+        int lastIndex = Math.min(currentPage * PER, urls.size());
 
-        if (urls.size() > PER) {
-            urls = urls.subList(firstIndex, firstIndex + PER);
-        }
-
-        AllUrlsPage page = new AllUrlsPage(urls, pageCount);
+        AllUrlsPage page = new AllUrlsPage(urls.subList(firstIndex, lastIndex));
+        page.setListSize(urls.size());
+        page.setCurrentPage(currentPage);
         page.setFlash(flash);
         page.setFlashType(flashType);
         ctx.render("urls.jte", Collections.singletonMap("page", page));

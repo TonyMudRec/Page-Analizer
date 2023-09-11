@@ -59,7 +59,7 @@ public class App {
              Statement statement = connection.createStatement()) {
             statement.execute(sql);
         }
-        BaseRepository.setDataSource(dataSource);
+        BaseRepository.dataSource = dataSource;
 
         JavalinJte.init(createTemplateEngine());
 
