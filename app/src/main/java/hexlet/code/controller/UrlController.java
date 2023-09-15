@@ -4,7 +4,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,6 +15,7 @@ import hexlet.code.repository.CheckRepository;
 import hexlet.code.repository.UrlRepository;
 import hexlet.code.util.NamedRoutes;
 import io.javalin.http.Context;
+
 
 public class UrlController {
     private static final int PER = 5;
@@ -57,6 +57,7 @@ public class UrlController {
     public static void showUrls(Context ctx) throws SQLException {
         String flash = ctx.consumeSessionAttribute("flash");
         String flashType = ctx.consumeSessionAttribute("flashType");
+
         List<Url> urls = UrlRepository.getEntities();
         int currentPage = ctx.queryParamAsClass("pageNumber", Integer.class).getOrDefault(1);
         int firstIndex = (currentPage - 1) * PER;
@@ -71,13 +72,17 @@ public class UrlController {
     }
 
     public static void showUrl(Context ctx) throws SQLException {
+        String flash = ctx.consumeSessionAttribute("flash");
+        String flashType = ctx.consumeSessionAttribute("flashType");
+
         Long id = ctx.pathParamAsClass("id", Long.class).get();
         List<UrlCheck> checks = CheckRepository.find(id);
-        checks = checks.size() > PER ? checks.subList(checks.size() - PER, checks.size()) : checks;
         Url url = UrlRepository.find(id);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        String createdAt  = dateFormat.format(url.getCreatedAt());
-        UrlPage page = new UrlPage(id, url.getName(), createdAt, checks);
+        checks = checks.size() > PER ? checks.subList(checks.size() - PER, checks.size()) : checks;
+
+        UrlPage page = new UrlPage(id, url.getName(), url.getStringCreatedAt(), checks);
+        page.setFlash(flash);
+        page.setFlashType(flashType);
         ctx.render("show.jte", Collections.singletonMap("page", page));
     }
 }

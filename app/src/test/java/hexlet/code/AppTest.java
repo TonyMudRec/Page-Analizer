@@ -7,7 +7,10 @@ import hexlet.code.util.NamedRoutes;
 import io.javalin.Javalin;
 import io.javalin.testtools.JavalinTest;
 
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,23 +23,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AppTest {
 
     private static Javalin app;
-//    private static final MockWebServer server = new MockWebServer();
-//    private static final String NAME = server.url("https://www.example.com").toString();
+    private static final MockWebServer SERVER = new MockWebServer();
+    private static final URL ADDRESS = SERVER.url("https://www.example.com").url();
     private static final String NAME = "https://www.example.com";
 
     @BeforeEach
     public void beforeEach() throws SQLException, IOException {
         app = App.getApp();
     }
-//    @BeforeAll
-//    public static void beforeAll() throws IOException {
-//        server.enqueue(new MockResponse().setBody("hello, world!"));
-//    }
+    @BeforeAll
+    public static void beforeAll() throws IOException {
+        SERVER.enqueue(new MockResponse().setResponseCode(200));
+        SERVER.enqueue(new MockResponse()
+                .addHeader("Content-Type", "application/json; charset=utf-8")
+                .addHeader("title", "application/json; charset=utf-8")
+                .setBody("{}"));
+    }
 
     @AfterAll
     public static void afterAll() throws IOException {
         app.stop();
-//        server.close();
+        SERVER.shutdown();
     }
     @Test
     void rootTest() {
@@ -96,23 +103,25 @@ class AppTest {
 
             var response = client.get(NamedRoutes.urlsPath());
             assertThat(response.code()).isEqualTo(200);
+            assertThat(response.body().string()).contains(NAME);
         });
     }
-//    @Test
-//    void startCheckUrlTest() {
-//        JavalinTest.test(app, (server, client) -> {
-//            URL url = new URL(NAME);
-//            var protocol = url.getProtocol();
-//            var host = url.getHost();
-//            var name = protocol + "://" + host;
-//            var requestBody = "url=" + name;
-//
-//            client.post(NamedRoutes.urlsPath(), requestBody);
-//            client.post(NamedRoutes.checkUrl("1"));
-//
-//            var response = client.get(NamedRoutes.urlPath("1"));
-//            assertThat(response.code()).isEqualTo(200);
-//            assertThat(response.body().string()).contains("200");
-//        });
-//    }
+    @Test
+    void startCheckUrlTest() {
+        JavalinTest.test(app, (server, client) -> {
+            URL url = ADDRESS;
+            var protocol = url.getProtocol();
+            var host = url.getHost();
+            var name = protocol + "://" + host;
+            var requestBody = "url=" + name;
+
+            client.post(NamedRoutes.urlsPath(), requestBody);
+            var response1 = client.post(NamedRoutes.checkUrl("1"));
+            assertThat(response1.code()).isEqualTo(200);
+
+            var response2 = client.get(NamedRoutes.urlPath("1"));
+            assertThat(response2.code()).isEqualTo(200);
+//            assertThat(response.body().string()).contains("");
+        });
+    }
 }

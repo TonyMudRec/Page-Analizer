@@ -1,5 +1,5 @@
 @import hexlet.code.pages.manager.UrlPage
-@import hexlet.code.model.Url
+@import hexlet.code.model.UrlCheck
 @param UrlPage page
 
 @template.layout.index(
@@ -42,9 +42,18 @@ content = @`
             <th class="col-2">Дата проверки</th>
             </thead>
             <tbody>
-<%--            @if()--%>
-<%--                --%>
-<%--            @endif--%>
+            @if(page.getChecks() != null)
+                @for(UrlCheck check : page.getChecks())
+                    <tr>
+                        <td>${check.getId()}</td>
+                        <td>${check.getStatusCode()}</td>
+                        <td>${check.getTitle()}</td>
+                        <td>${check.getH1()}</td>
+                        <td>${check.getDescription()}</td>
+                        <td>${check.getStringCreatedAt()}</td>
+                    </tr>
+                @endfor
+            @endif
             </tbody>
         </table>
     </div>

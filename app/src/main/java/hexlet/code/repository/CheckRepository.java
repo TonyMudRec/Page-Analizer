@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CheckRepository extends BaseRepository {
     public static void save(UrlCheck check) throws SQLException {
-        String sql = "INSERT INTO url_checks (url_id, statusCode, h1, title, description, created_at) "
+        String sql = "INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
         try (var conn = dataSource.getConnection();
              var preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -22,6 +22,7 @@ public class CheckRepository extends BaseRepository {
             preparedStatement.setString(5, check.getDescription());
             preparedStatement.setTimestamp(6, check.getCreatedAt());
             preparedStatement.executeUpdate();
+            updateLastCheck(check.getUrlId(), check.getCreatedAt());
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
 
             if (generatedKeys.next()) {
@@ -52,6 +53,15 @@ public class CheckRepository extends BaseRepository {
             }
             return checks;
         }
+    }
 
+    public static void updateLastCheck(long urlId, Timestamp newLastCheck) throws SQLException {
+        String sql = "UPDATE urls SET last_check = ? WHERE id = ?";
+        try (var conn = dataSource.getConnection();
+             var preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setTimestamp(1, newLastCheck);
+            preparedStatement.setLong(2, urlId);
+            preparedStatement.executeUpdate();
+        }
     }
 }

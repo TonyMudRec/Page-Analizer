@@ -26,8 +26,14 @@ content = @`
                             <td>
                                 <a href="/urls/${url.getId()}">${url.getName()}</a>
                             </td>
-                            <td></td>
-                            <td></td>
+                            @if(!url.getStringLastCheck().equals(""))
+                                <td>${url.getStringLastCheck()}</td>
+                                <td>200</td>
+                            @else
+                                <td></td>
+                                <td></td>
+                            @endif
+
                         </tr>
                     @endfor
                 @endif

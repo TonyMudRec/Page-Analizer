@@ -6,6 +6,8 @@ import lombok.ToString;
 
 import java.sql.Timestamp;
 
+import static hexlet.code.model.Url.convertTimestampToDate;
+
 @Getter
 @ToString
 public class UrlCheck {
@@ -27,7 +29,8 @@ public class UrlCheck {
         this.urlId = urlId;
         this.createdAt = createdAt;
     }
+
+    public String getStringCreatedAt() {
+        return convertTimestampToDate(createdAt);
+    }
 }
-
-
-

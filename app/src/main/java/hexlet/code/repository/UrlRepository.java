@@ -36,7 +36,8 @@ public class UrlRepository extends BaseRepository {
             if (resultSet.next()) {
                 Long id = resultSet.getLong("id");
                 Timestamp createdAt = resultSet.getTimestamp("created_at");
-                Url url = new Url(name, createdAt);
+                Timestamp lastCheck = resultSet.getTimestamp("last_check");
+                Url url = new Url(name, createdAt, lastCheck);
                 url.setId(id);
                 return url;
             }
@@ -53,7 +54,8 @@ public class UrlRepository extends BaseRepository {
             if (resultSet.next()) {
                 String name = resultSet.getString("name");
                 Timestamp createdAt = resultSet.getTimestamp("created_at");
-                Url url = new Url(name, createdAt);
+                Timestamp lastCheck = resultSet.getTimestamp("last_check");
+                Url url = new Url(name, createdAt, lastCheck);
                 url.setId(id);
                 return url;
             }
@@ -71,7 +73,8 @@ public class UrlRepository extends BaseRepository {
                 Long id = resultSet.getLong("id");
                 String name = resultSet.getString("name");
                 Timestamp createdAt = resultSet.getTimestamp("created_at");
-                Url url = new Url(name, createdAt);
+                Timestamp lastCheck = resultSet.getTimestamp("last_check");
+                Url url = new Url(name, createdAt, lastCheck);
                 url.setId(id);
                 urls.add(url);
             }
