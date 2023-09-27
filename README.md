@@ -5,8 +5,7 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/8194cd4693517cf6a0e4/test_coverage)](https://codeclimate.com/github/TonyMudRec/java-project-72/test_coverage)
 
 *Demo:*
-[Demo on Render](https://sites-analisator.onrender.com)
-The phone version has limited functionality and is difficult to navigate.
+[Demo on Render](https://java-page-analyzer-ru.hexlet.app)
 
 ## Requirements
 
