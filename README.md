@@ -1,3 +1,7 @@
+# Анализатор страниц
+*Сайт, который анализирует указанные страницы на SEO пригодность.*
+
+
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/TonyMudRec/java-project-72/workflows/hexlet-check/badge.svg)](https://github.com/TonyMudRec/java-project-72/actions)
 ![Build Status](https://github.com/TonyMudRec/java-project-72/actions/workflows/build-check.yml/badge.svg)
@@ -8,13 +12,11 @@
 [Demo](https://java-page-analyzer-ru.hexlet.app)
 
 ## Requirements
-
 * JDK 17.0.8.1
 * Gradle 7.4.2
 * GNU Make
 
 ## Usage
-
 ```bash
 make install
 ```
