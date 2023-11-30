@@ -38,7 +38,7 @@
     <div class="container-xl">
         <div class="text-center">
             created by
-            <a href="https://github.com/TonyMudRec/java-project-72" target="_blank">TonyMudRec</a>
+            <a href="https://github.com/TonyMudRec/java-project-72" target="_blank">TonyMudRec</a><br/>
         </div>
     </div>
 </footer>

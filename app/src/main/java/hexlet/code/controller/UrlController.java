@@ -80,7 +80,10 @@ public class UrlController {
         Url url = UrlRepository.find(id);
         checks = checks.size() > PER ? checks.subList(checks.size() - PER, checks.size()) : checks;
 
-        UrlPage page = new UrlPage(id, url.getName(), url.getStringCreatedAt(), checks);
+        UrlPage page = new UrlPage(id,
+                url != null ? url.getName() : null,
+                url != null ? url.getStringCreatedAt() : null,
+                checks);
         page.setFlash(flash);
         page.setFlashType(flashType);
         ctx.render("show.jte", Collections.singletonMap("page", page));

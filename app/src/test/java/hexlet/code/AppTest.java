@@ -121,7 +121,7 @@ class AppTest {
 
             var response2 = client.get(NamedRoutes.urlPath("1"));
             assertThat(response2.code()).isEqualTo(200);
-//            assertThat(response.body().string()).contains("");
+            assertThat(response2.body().string()).contains(NAME);
         });
     }
 }
