@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 
 @Getter
 @ToString
-public class Url {
+public final class Url {
     @Setter
     private Long id;
     @ToString.Include

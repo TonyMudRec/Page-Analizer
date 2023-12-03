@@ -10,7 +10,7 @@ import static hexlet.code.model.Url.convertTimestampToDate;
 
 @Getter
 @ToString
-public class UrlCheck {
+public final class UrlCheck {
     @Setter
     private Long id;
     private int statusCode;
