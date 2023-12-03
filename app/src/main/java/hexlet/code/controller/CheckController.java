@@ -11,7 +11,6 @@ import kong.unirest.Unirest;
 import kong.unirest.UnirestException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
