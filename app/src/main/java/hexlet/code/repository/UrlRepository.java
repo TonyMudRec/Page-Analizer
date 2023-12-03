@@ -17,13 +17,6 @@ public class UrlRepository extends BaseRepository {
             preparedStatement.setString(1, url.getName());
             preparedStatement.setTimestamp(2, url.getCreatedAt());
             preparedStatement.executeUpdate();
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-
-            if (generatedKeys.next()) {
-                url.setId(generatedKeys.getLong(1));
-            } else {
-                throw new SQLException("DB have not returned an id after saving an entity");
-            }
         }
     }
 
@@ -62,7 +55,9 @@ public class UrlRepository extends BaseRepository {
     }
 
     public static List<Url> getEntities() throws SQLException {
-        String sql = "SELECT * FROM urls";
+        String sql = "SELECT u.id, u.name, u.created_at, max(uc.created_at) as last_check "
+                + "FROM urls u LEFT JOIN url_checks uc on uc.url_id = u.id "
+                + "GROUP BY u.id, u.name, u.created_at";
         try (var conn = dataSource.getConnection();
              var preparedStatement = conn.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();

@@ -22,14 +22,6 @@ public class CheckRepository extends BaseRepository {
             preparedStatement.setString(5, check.getDescription());
             preparedStatement.setTimestamp(6, check.getCreatedAt());
             preparedStatement.executeUpdate();
-            updateLastCheck(check.getUrlId(), check.getCreatedAt());
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-
-            if (generatedKeys.next()) {
-                check.setId(generatedKeys.getLong(1));
-            } else {
-                throw new SQLException("DB have not returned an id after saving an entity");
-            }
         }
     }
 
@@ -52,16 +44,6 @@ public class CheckRepository extends BaseRepository {
                 checks.add(check);
             }
             return checks;
-        }
-    }
-
-    public static void updateLastCheck(long urlId, Timestamp newLastCheck) throws SQLException {
-        String sql = "UPDATE urls SET last_check = ? WHERE id = ?";
-        try (var conn = dataSource.getConnection();
-             var preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setTimestamp(1, newLastCheck);
-            preparedStatement.setLong(2, urlId);
-            preparedStatement.executeUpdate();
         }
     }
 }

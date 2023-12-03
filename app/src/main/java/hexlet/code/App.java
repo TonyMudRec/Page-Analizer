@@ -11,10 +11,11 @@ import gg.jte.resolve.ResourceCodeResolver;
 import hexlet.code.controller.CheckController;
 import hexlet.code.controller.RootController;
 import hexlet.code.controller.UrlController;
-import hexlet.code.repository.BaseRepository;
 import hexlet.code.util.NamedRoutes;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.io.BufferedReader;
@@ -28,25 +29,48 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.stream.Collectors;
 
+import static hexlet.code.repository.BaseRepository.dataSource;
+
 public class App {
+
+    public static Logger logger = LoggerFactory.getLogger(App.class);
 
     public static void main(String[] args) throws SQLException, IOException {
         Javalin app = getApp();
         app.start(getPort());
+
     }
 
     private static int getPort() {
         String port = System.getenv().getOrDefault("PORT", "8080");
-        return Integer.valueOf(port);
+
+        logger.info("Received port {}", port);
+
+        return Integer.parseInt(port);
     }
 
-    public static Javalin getApp() throws IOException, SQLException {
-        HikariConfig hikariConfig = new HikariConfig();
+    public static HikariDataSource getDataSource() throws IOException, SQLException {
+//        String dbName = System.getenv().getOrDefault("JDBC_DATABASE_NAME", "testdb");
+//        String dbPort = System.getenv().getOrDefault("JDBC_DATABASE_PORT", "5432");
+//        String userName = System.getenv().getOrDefault("JDBC_USER_NAME", "admin");
+//        String userPassword = System.getenv().getOrDefault("JDBC_USER_PASSWORD", "testdb");
+//        String jdbc =  String.format("jdbc:postgresql://localhost:%s/%s?user=%s&password=%s"
+//                , dbPort, dbName, userName, userPassword);
         String jdbc = System
                 .getenv()
                 .getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:hexlet_project;DB_CLOSE_DELAY=-1;");
+
+        HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(jdbc);
         HikariDataSource dataSource = new HikariDataSource(hikariConfig);
+
+        logger.info("database url " + jdbc);
+
+        return dataSource;
+    }
+
+    public static Javalin getApp() throws SQLException, IOException {
+        dataSource = getDataSource();
 
         InputStream schemaStream = App.class.getClassLoader().getResourceAsStream("schema.sql");
         if (schemaStream == null) {
@@ -60,7 +84,6 @@ public class App {
              Statement statement = connection.createStatement()) {
             statement.execute(sql);
         }
-        BaseRepository.dataSource = dataSource;
 
         JavalinJte.init(createTemplateEngine());
 
