@@ -8,16 +8,19 @@ import java.sql.Timestamp;
 
 import static hexlet.code.model.Url.convertTimestampToDate;
 
-@Getter
+/**
+ * checks table.
+ */
 @ToString
+@Getter
 public final class UrlCheck {
+
     @Setter
     private Long id;
     private int statusCode;
     private String title;
     private String h1;
     private String description;
-    @Setter
     private Long urlId;
     private Timestamp createdAt;
 
@@ -30,6 +33,9 @@ public final class UrlCheck {
         this.createdAt = createdAt;
     }
 
+    /**
+     * @return date in string format.
+     */
     public String getStringCreatedAt() {
         return convertTimestampToDate(createdAt);
     }

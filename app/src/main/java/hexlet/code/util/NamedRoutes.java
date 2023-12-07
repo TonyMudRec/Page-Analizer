@@ -1,5 +1,8 @@
 package hexlet.code.util;
 
+/**
+ * storage of named routes.
+ */
 public class NamedRoutes {
     public static String rootPath() {
         return "/";

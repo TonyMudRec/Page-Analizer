@@ -31,6 +31,7 @@ class AppTest {
     public void beforeEach() throws SQLException, IOException {
         app = App.getApp();
     }
+
     @BeforeAll
     public static void beforeAll() throws IOException {
         SERVER.enqueue(new MockResponse().setResponseCode(200));
@@ -45,6 +46,7 @@ class AppTest {
         app.stop();
         SERVER.shutdown();
     }
+
     @Test
     void rootTest() {
         JavalinTest.test(app, (server, client) -> {
@@ -65,7 +67,7 @@ class AppTest {
     }
 
     @Test
-    void urlsTest() {
+    void showListOfUrlsTest() {
         JavalinTest.test(app, (server, client) -> {
             var response = client.get(NamedRoutes.urlsPath());
             assertThat(response.code()).isEqualTo(200);
@@ -74,7 +76,7 @@ class AppTest {
     }
 
     @Test
-    void urlTest() {
+    void showUrlTest() {
         JavalinTest.test(app, (server, client) -> {
             URL url = new URL(NAME);
             String protocol = url.getProtocol();
@@ -106,6 +108,7 @@ class AppTest {
             assertThat(response.body().string()).contains(NAME);
         });
     }
+
     @Test
     void startCheckUrlTest() {
         JavalinTest.test(app, (server, client) -> {

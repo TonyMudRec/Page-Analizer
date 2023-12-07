@@ -9,7 +9,17 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * repository for urls checks.
+ */
+
 public class CheckRepository extends BaseRepository {
+
+    /**
+     * saves new check in table url_checks.
+     * @param check
+     * @throws SQLException
+     */
     public static void save(UrlCheck check) throws SQLException {
         String sql = "INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
@@ -25,6 +35,11 @@ public class CheckRepository extends BaseRepository {
         }
     }
 
+    /**
+     * @param urlId
+     * @return list of checks to url.
+     * @throws SQLException
+     */
     public static List<UrlCheck> find(long urlId) throws SQLException {
         List<UrlCheck> checks = new ArrayList<>();
         String sql = "SELECT * FROM url_checks WHERE url_id = ?";

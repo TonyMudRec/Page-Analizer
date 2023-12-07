@@ -5,6 +5,9 @@ import io.javalin.http.Context;
 
 import java.util.Collections;
 
+/**
+ * root page handler.
+ */
 public class RootController {
     public static void getRootPage(Context ctx) {
         String url = ctx.formParam("url");

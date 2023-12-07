@@ -3,13 +3,19 @@ package hexlet.code.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
-@Getter
+/**
+ * urls table.
+ */
 @ToString
+@Getter
+
 public final class Url {
+
     @Setter
     private Long id;
     @ToString.Include
@@ -28,16 +34,26 @@ public final class Url {
         this.lastCheck = lastCheck;
     }
 
-    public static String convertTimestampToDate(Timestamp timestamp) {
+    /**
+     * @param timestamp
+     * @return date in string format.
+     */
+    public static @NotNull String convertTimestampToDate(Timestamp timestamp) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         return dateFormat.format(timestamp);
     }
 
-    public String getStringCreatedAt() {
+    /**
+     * @return date in string format.
+     */
+    public @NotNull String getStringCreatedAt() {
         return convertTimestampToDate(createdAt);
     }
 
-    public String getStringLastCheck() {
+    /**
+     * @return date in string format.
+     */
+    public @NotNull String getStringLastCheck() {
         return lastCheck == null ? "" : convertTimestampToDate(lastCheck);
     }
 }
