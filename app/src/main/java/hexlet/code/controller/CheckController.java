@@ -52,7 +52,7 @@ public class CheckController {
      * @param id
      * @param url
      */
-    public static boolean isSuccessfullyCheck(Url url, long id) {
+    public static boolean isSuccessfullyCheck(@NotNull Url url, long id) {
         long now = System.currentTimeMillis();
         Timestamp currentTime = new Timestamp(now);
         try {

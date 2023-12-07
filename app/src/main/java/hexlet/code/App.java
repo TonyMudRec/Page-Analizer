@@ -15,6 +15,7 @@ import hexlet.code.util.NamedRoutes;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,16 +79,18 @@ public class App {
     /**
      * @return customized app with prepared db.
      */
-    public static @NotNull Javalin getApp() {
+    public static @Nullable Javalin getApp() {
         try {
             dataSource = getDataSource();
         } catch (Exception e) {
             logger.warn(e.getMessage());
+            return null;
         }
 
         InputStream schemaStream = App.class.getClassLoader().getResourceAsStream("schema.sql");
         if (schemaStream == null) {
             logger.warn("schema.sql not found");
+            return null;
         }
         String sql = new BufferedReader(new InputStreamReader(schemaStream, StandardCharsets.UTF_8))
                 .lines()
@@ -98,6 +101,7 @@ public class App {
             statement.execute(sql);
         } catch (SQLException e) {
             logger.warn(e.getSQLState());
+            return null;
         }
 
         JavalinJte.init(createTemplateEngine());

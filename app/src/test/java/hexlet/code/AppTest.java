@@ -3,6 +3,10 @@
  */
 package hexlet.code;
 
+import hexlet.code.model.Url;
+import hexlet.code.model.UrlCheck;
+import hexlet.code.repository.CheckRepository;
+import hexlet.code.repository.UrlRepository;
 import hexlet.code.util.NamedRoutes;
 import io.javalin.Javalin;
 import io.javalin.testtools.JavalinTest;
@@ -17,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,12 +33,12 @@ class AppTest {
     private static final String NAME = "https://www.example.com";
 
     @BeforeEach
-    public void beforeEach() throws SQLException, IOException {
+    public void beforeEach() {
         app = App.getApp();
     }
 
     @BeforeAll
-    public static void beforeAll() throws IOException {
+    public static void beforeAll() {
         SERVER.enqueue(new MockResponse().setResponseCode(200));
         SERVER.enqueue(new MockResponse()
                 .addHeader("Content-Type", "application/json; charset=utf-8")
@@ -51,6 +56,7 @@ class AppTest {
     void rootTest() {
         JavalinTest.test(app, (server, client) -> {
             var response = client.get(NamedRoutes.rootPath());
+
             assertThat(response.code()).isEqualTo(200);
             assertThat(response.body().string()).contains("Анализатор страниц");
         });
@@ -67,9 +73,10 @@ class AppTest {
     }
 
     @Test
-    void showListOfUrlsTest() {
+    void showEmptyListOfUrlsTest() {
         JavalinTest.test(app, (server, client) -> {
             var response = client.get(NamedRoutes.urlsPath());
+
             assertThat(response.code()).isEqualTo(200);
             assertThat(response.body().string()).contains("Сайты");
         });
@@ -86,9 +93,35 @@ class AppTest {
             client.post(NamedRoutes.urlsPath(), requestBody);
 
             var response = client.get(NamedRoutes.urlPath("1"));
+
             assertThat(response.code()).isEqualTo(200);
             assertThat(response.body().string()).contains(NAME);
         });
+    }
+
+    @Test
+    void importUrlAndCheckTest() throws SQLException {
+        var now = System.currentTimeMillis();
+        var currentTime = new Timestamp(now);
+        Url url = new Url(NAME, currentTime);
+
+        UrlRepository.save(url);
+        url.setId(1L);
+
+        assertThat(UrlRepository.find(NAME)).isEqualTo(url);
+        assertThat(UrlRepository.find(1L)).isEqualTo(url);
+
+        UrlCheck check = new UrlCheck(200,
+                "title",
+                "h1",
+                "description",
+                1L,
+                currentTime);
+
+        CheckRepository.save(check);
+        check.setId(1L);
+
+        assertThat(CheckRepository.find(1L)).contains(check);
     }
 
     @Test
@@ -104,6 +137,7 @@ class AppTest {
             }
 
             var response = client.get(NamedRoutes.urlsPath());
+
             assertThat(response.code()).isEqualTo(200);
             assertThat(response.body().string()).contains(NAME);
         });
@@ -120,9 +154,11 @@ class AppTest {
 
             client.post(NamedRoutes.urlsPath(), requestBody);
             var response1 = client.post(NamedRoutes.checkUrl("1"));
+            System.out.println(response1.code());
             assertThat(response1.code()).isEqualTo(200);
 
             var response2 = client.get(NamedRoutes.urlPath("1"));
+
             assertThat(response2.code()).isEqualTo(200);
             assertThat(response2.body().string()).contains(NAME);
         });

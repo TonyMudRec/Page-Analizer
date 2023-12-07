@@ -1,6 +1,5 @@
 package hexlet.code.controller;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -32,12 +31,12 @@ public class UrlController {
      * creates new url and add to url table.
      * @param ctx
      */
-    public static void addUrl(@NotNull Context ctx) {
+    public static void addUrl(Context ctx) {
         URL url = null;
 
         try {
             url = new URL(ctx.formParam("url").trim());
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             addFlash(ctx, "alert-danger", "Некорректный URL");
             ctx.redirect(NamedRoutes.rootPath());
             return;
@@ -55,7 +54,7 @@ public class UrlController {
             e.getSQLState();
         }
 
-        if (isUrlExist) {
+        if (!isUrlExist) {
             long now = System.currentTimeMillis();
             Timestamp currentTime = new Timestamp(now);
             Url newUrl = new Url(name, currentTime);

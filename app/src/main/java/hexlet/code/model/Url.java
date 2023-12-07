@@ -7,13 +7,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Objects;
 
 /**
  * urls table.
  */
 @ToString
 @Getter
-
 public final class Url {
 
     @Setter
@@ -55,5 +55,25 @@ public final class Url {
      */
     public @NotNull String getStringLastCheck() {
         return lastCheck == null ? "" : convertTimestampToDate(lastCheck);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Url url = (Url) o;
+        return Objects.equals(id, url.id)
+                && Objects.equals(name, url.name)
+                && Objects.equals(createdAt, url.createdAt)
+                && Objects.equals(lastCheck, url.lastCheck);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, createdAt, lastCheck);
     }
 }

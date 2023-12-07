@@ -1,25 +1,32 @@
 package hexlet.code.util;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * storage of named routes.
  */
 public class NamedRoutes {
-    public static String rootPath() {
+    @Contract(pure = true)
+    public static @NotNull String rootPath() {
         return "/";
     }
-    public static String urlsPath() {
+    @Contract(pure = true)
+    public static @NotNull String urlsPath() {
         return "/urls";
     }
-    public static String urlPath(String id) {
+    @Contract(pure = true)
+    public static @NotNull String urlPath(String id) {
         return "/urls/" + id;
     }
-    public static String urlPath(Long id) {
+    public static @NotNull String urlPath(Long id) {
         return urlPath(String.valueOf(id));
     }
-    public static String checkUrl(String id) {
+    @Contract(pure = true)
+    public static @NotNull String checkUrl(String id) {
         return "/urls/" + id + "/checks";
     }
-    public static String checkUrl(Long id) {
+    public static @NotNull String checkUrl(Long id) {
         return checkUrl(String.valueOf(id));
     }
 }

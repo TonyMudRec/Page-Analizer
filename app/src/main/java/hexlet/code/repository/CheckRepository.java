@@ -1,6 +1,7 @@
 package hexlet.code.repository;
 
 import hexlet.code.model.UrlCheck;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +21,7 @@ public class CheckRepository extends BaseRepository {
      * @param check
      * @throws SQLException
      */
-    public static void save(UrlCheck check) throws SQLException {
+    public static void save(@NotNull UrlCheck check) throws SQLException {
         String sql = "INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
         try (var conn = dataSource.getConnection();
@@ -54,7 +55,7 @@ public class CheckRepository extends BaseRepository {
                 String title = resultSet.getString("title");
                 String description = resultSet.getString("description");
                 Timestamp createdAt = resultSet.getTimestamp("created_at");
-                UrlCheck check = new UrlCheck(statusCode, h1, title, description, urlId, createdAt);
+                UrlCheck check = new UrlCheck(statusCode, title, h1, description, urlId, createdAt);
                 check.setId(id);
                 checks.add(check);
             }
